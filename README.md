@@ -1,4 +1,5 @@
 # FiniteDiscreteMeasure.jl
+** VERY EXPERIMENTAL**
 
 At the moment, this is just a copy of
 CatagoricalDistributions.jl. The idea
