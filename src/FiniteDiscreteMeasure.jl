@@ -9,7 +9,7 @@ export discretemeasure
 struct MvDiscreteNonParametric{T<:Real,
                                P<:Real,
                                Ts<:AbstractVector{<:AbstractVector{T}},
-                               Ps<:AbstractVector{P}} <: DiscreteUnivariateDistribution
+                               Ps<:AbstractVector{P}} <: DiscreteMultivarateDistribution
     support::Ts
     p::Ps
 
