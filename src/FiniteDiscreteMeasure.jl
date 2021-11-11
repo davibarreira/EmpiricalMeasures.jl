@@ -1,22 +1,21 @@
 module FiniteDiscreteMeasure
 
 using Distributions
-import Distributions: DiscreteMultivariateDistribution
+import Distributions:DiscreteMultivariateDistribution
+import Distributions:AliasTable
+using Random
 using ArraysOfArrays
 
 export MvDiscreteNonParametric
 export discretemeasure
+export rand
 
-struct MvDiscreteNonParametric{T<:Real,
-                               P<:Real,
-                               Ts<:AbstractVector{<:AbstractVector{T}},
-                               Ps<:AbstractVector{P}} <: DiscreteMultivariateDistribution
+struct MvDiscreteNonParametric{T <: Real,P <: Real,Ts <: AbstractVector{<:AbstractVector{T}},Ps <: AbstractVector{P}} <: DiscreteMultivariateDistribution
 
     support::Ts
     p::Ps
 
-    function MvDiscreteNonParametric{T,P,Ts,Ps}(support::Ts, p::Ps) where {
-            T<:Real,P<:Real,Ts<:AbstractVector{<:AbstractVector{T}},Ps<:AbstractVector{P}}
+    function MvDiscreteNonParametric{T,P,Ts,Ps}(support::Ts, p::Ps) where {T <: Real,P <: Real,Ts <: AbstractVector{<:AbstractVector{T}},Ps <: AbstractVector{P}}
         length(support) == length(p) || error("length of `support` and `p` must be equal")
         isprobvec(p) || error("`p` must be a probability vector")
         allunique(support) || error("`support` must contain only unique value")
@@ -48,7 +47,7 @@ function MvDiscreteNonParametric(
     support::AbstractVector{<:AbstractVector{<:Real}},
     p::AbstractVector{<:Real}=fill(inv(length(support)), length(support)),
 )
-    return MvDiscreteNonParametric{eltype(eltype(support)),eltype(p), typeof(support),typeof(p)}(support, p)
+    return MvDiscreteNonParametric{eltype(eltype(support)),eltype(p),typeof(support),typeof(p)}(support, p)
 end
 
 """
@@ -76,23 +75,38 @@ using LinearAlgebra
 """
 function MvDiscreteNonParametric(
     support::Matrix{<:Real},
-    by = :row,
-    p::AbstractVector{<:Real}= by == :row ? fill(inv(size(support)[1]), size(support)[1]) : fill(inv(size(support)[2]), size(support)[2])
+    by=:row,
+    p::AbstractVector{<:Real}=by == :row ? fill(inv(size(support)[1]), size(support)[1]) : fill(inv(size(support)[2]), size(support)[2])
 )
     if by == :row
         s = nestedview(support')
-        return MvDiscreteNonParametric{eltype(eltype(s)),eltype(p), typeof(s),typeof(p)}(s, p)
+        return MvDiscreteNonParametric{eltype(eltype(s)),eltype(p),typeof(s),typeof(p)}(s, p)
     elseif by == :col
         s = nestedview(support)
-        return MvDiscreteNonParametric{eltype(eltype(s)),eltype(p), typeof(s),typeof(p)}(s, p)
+        return MvDiscreteNonParametric{eltype(eltype(s)),eltype(p),typeof(s),typeof(p)}(s, p)
     else
         error("only options are :row and :col")
-    end
+end
 end
 
 Base.eltype(::Type{<:MvDiscreteNonParametric{T}}) where T = T
 
+"""
+    support(d::MvDiscreteNonParametric)
+Get a sorted AbstractVector defining the support of `d`.
+"""
+support(d::MvDiscreteNonParametric) = d.support
 
+"""
+    probs(d::MvDiscreteNonParametric)
+Get the vector of probabilities associated with the support of `d`.
+"""
+probs(d::MvDiscreteNonParametric)  = d.p
+
+# length(d::MvDiscreteNonParametric) = length(d.support)
+
+sampler(d::MvDiscreteNonParametric) =
+    MvDiscreteNonParametricSampler(support(d), probs(d))
 
 """
     discretemeasure(
@@ -128,17 +142,43 @@ using ArraysOfArrays
 function discretemeasure(
     support::AbstractVector{<:Real},
     p::AbstractVector{<:Real}=fill(inv(length(support)), length(support)),
-)
+    )
     return DiscreteNonParametric(support, p)
 end
 function discretemeasure(
     support::AbstractVector{<:AbstractVector{<:Real}},
     p::AbstractVector{<:Real}=fill(inv(length(support)), length(support)),
-)
-    return MvDiscreteNonParametric{eltype(eltype(support)),eltype(p), typeof(support),typeof(p)}(support, p)
+    )
+    return MvDiscreteNonParametric{eltype(eltype(support)),eltype(p),typeof(support),typeof(p)}(support, p)
 end
 
-# Distributions.support(d::FiniteDiscreteMeasure) = d.support
-# Distributions.probs(d::FiniteDiscreteMeasure) = d.p
+
+"""
+    MvDiscreteNonParametricSampler(support, p)
+Data structure for efficiently sampling from an arbitrary probability mass
+function defined by `support` and probabilities `p`.
+"""
+struct MvDiscreteNonParametricSampler{T <: Real,S <: AbstractVector{<:AbstractVector{T}},A <: AliasTable} <: Sampleable{Multivariate,Discrete}
+    support::S
+    aliastable::A
+
+    function MvDiscreteNonParametricSampler{T,S}(support::S, probs::AbstractVector{<:Real}
+                                                ) where {T <: Real,S <: AbstractVector{<:AbstractVector{T}}}
+        aliastable = AliasTable(probs)
+        new{T,S,typeof(aliastable)}(support, aliastable)
+    end
+end
+
+MvDiscreteNonParametricSampler(support::S, p::AbstractVector{<:Real}
+                              ) where {T <: Real,S <: AbstractVector{<:AbstractVector{T}}} =
+    MvDiscreteNonParametricSampler{T,S}(support, p)
+
+Base.rand(rng::AbstractRNG, s::MvDiscreteNonParametricSampler) =
+    (@inbounds v = s.support[rand(rng, s.aliastable)]; v)
+
+
+
+
+
 
 end
