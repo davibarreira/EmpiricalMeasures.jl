@@ -1,6 +1,6 @@
-using FiniteDiscreteMeasure
+using EmpiricalMeasure
 using Test
 
-@testset "FiniteDiscreteMeasure.jl" begin
+@testset "EmpiricalMeasure.jl" begin
     # Write your tests here.
 end

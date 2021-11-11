@@ -9,7 +9,7 @@ using ArraysOfArrays
 export MvDiscreteNonParametric
 export MvDiscreteNonParametricSampler
 export discretemeasure
-export sampler
+# export sampler
 # export rand
 
 struct MvDiscreteNonParametric{T <: Real,P <: Real,Ts <: AbstractVector{<:AbstractVector{T}},Ps <: AbstractVector{P}} <: DiscreteMultivariateDistribution
