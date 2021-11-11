@@ -5,19 +5,6 @@ using ArraysOfArrays
 
 export MvDiscreteNonParametric
 export discretemeasure
-# export EmpiricalDistribution
-# Write your package code here.
-
-# struct EmpiricalDistribution{X<:AbstractVector,P<:AbstractVector}
-#     support::X
-#     p::P
-
-#     function EmpiricalDistribution{X,P}(support::X, p::P) where {X,P}
-#         length(support) == length(p) || error("length of `support` and `p` must be equal")
-#         isprobvec(p) || error("`p` must be a probability vector")
-#         return new{X,P}(support, p)
-#     end
-# end
 
 struct MvDiscreteNonParametric{T<:Real,
                                P<:Real,
