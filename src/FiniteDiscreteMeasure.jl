@@ -1,6 +1,7 @@
 module FiniteDiscreteMeasure
 
 using Distributions
+import Distributions: DiscreteMultivariateDistribution
 using ArraysOfArrays
 
 export MvDiscreteNonParametric
@@ -9,7 +10,8 @@ export discretemeasure
 struct MvDiscreteNonParametric{T<:Real,
                                P<:Real,
                                Ts<:AbstractVector{<:AbstractVector{T}},
-                               Ps<:AbstractVector{P}} <: DiscreteMultivarateDistribution
+                               Ps<:AbstractVector{P}} <: DiscreteMultivariateDistribution
+
     support::Ts
     p::Ps
 
@@ -89,6 +91,8 @@ function MvDiscreteNonParametric(
 end
 
 Base.eltype(::Type{<:MvDiscreteNonParametric{T}}) where T = T
+
+
 
 """
     discretemeasure(

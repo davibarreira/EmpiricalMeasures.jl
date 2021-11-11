@@ -1,7 +1,7 @@
 struct MvDiscreteNonParametric{T<:Real,
                                P<:Real,
                                Ts<:AbstractVector{<:AbstractVector{T}},
-                               Ps<:AbstractVector{P}} <: DiscreteMultivarateDistribution
+                               Ps<:AbstractVector{P}} <: DiscreteUnivariateDistribution
     support::Ts
     p::Ps
 
