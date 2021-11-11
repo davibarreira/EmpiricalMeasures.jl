@@ -200,9 +200,8 @@ end
 
 
 
-# pdf(d::MvDiscreteNonParametric) = copy(probs(d))
 
-function _logpdf(d::MvDiscreteNonParametric, x::AbstractVector{T}) where T<:Real
+function Distributions._logpdf(d::MvDiscreteNonParametric, x::AbstractVector{T}) where T <: Real
     s = support(d)
     p = probs(d)
     for i in 1:length(d)
