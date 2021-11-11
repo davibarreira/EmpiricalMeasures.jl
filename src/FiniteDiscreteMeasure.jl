@@ -8,7 +8,6 @@ using ArraysOfArrays
 
 export MvDiscreteNonParametric
 export discretemeasure
-export rand
 
 struct MvDiscreteNonParametric{T <: Real,P <: Real,Ts <: AbstractVector{<:AbstractVector{T}},Ps <: AbstractVector{P}} <: DiscreteMultivariateDistribution
 
@@ -103,7 +102,7 @@ Get the vector of probabilities associated with the support of `d`.
 """
 probs(d::MvDiscreteNonParametric)  = d.p
 
-# length(d::MvDiscreteNonParametric) = length(d.support)
+Base.length(d::MvDiscreteNonParametric) = length(d.support)
 
 sampler(d::MvDiscreteNonParametric) =
     MvDiscreteNonParametricSampler(support(d), probs(d))
