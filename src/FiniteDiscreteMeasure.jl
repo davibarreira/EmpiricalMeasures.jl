@@ -8,6 +8,8 @@ using ArraysOfArrays
 
 export MvDiscreteNonParametric
 export discretemeasure
+export sampler
+# export rand
 
 struct MvDiscreteNonParametric{T <: Real,P <: Real,Ts <: AbstractVector{<:AbstractVector{T}},Ps <: AbstractVector{P}} <: DiscreteMultivariateDistribution
 
@@ -104,8 +106,6 @@ probs(d::MvDiscreteNonParametric)  = d.p
 
 Base.length(d::MvDiscreteNonParametric) = length(d.support)
 
-sampler(d::MvDiscreteNonParametric) =
-    MvDiscreteNonParametricSampler(support(d), probs(d))
 
 """
     discretemeasure(
@@ -172,8 +172,26 @@ MvDiscreteNonParametricSampler(support::S, p::AbstractVector{<:Real}
                               ) where {T <: Real,S <: AbstractVector{<:AbstractVector{T}}} =
     MvDiscreteNonParametricSampler{T,S}(support, p)
 
-Base.rand(rng::AbstractRNG, s::MvDiscreteNonParametricSampler) =
+rand(rng::AbstractRNG, s::MvDiscreteNonParametricSampler) =
     (@inbounds v = s.support[rand(rng, s.aliastable)]; v)
+
+# Sampling
+
+sampler(d::MvDiscreteNonParametric) =
+    MvDiscreteNonParametricSampler(support(d), probs(d))
+
+function Base.rand(rng::AbstractRNG, d::MvDiscreteNonParametric)
+    x = d.support
+    p = d.p
+    n = length(p)
+    draw = Base.rand(rng, float(eltype(p)))
+    cp = p[1]
+    i = 1
+    while cp <= draw && i < n
+        @inbounds cp += p[i +=1]
+    end
+    return x[i]
+end
 
 
 
