@@ -1,12 +1,8 @@
-struct MvDiscreteNonParametric{T<:Real,
-                               P<:Real,
-                               Ts<:AbstractVector{<:AbstractVector{T}},
-                               Ps<:AbstractVector{P}} <: DiscreteUnivariateDistribution
+struct MvDiscreteNonParametric{T <: Real,P <: Real,Ts <: AbstractVector{<:AbstractVector{T}},Ps <: AbstractVector{P}} <: DiscreteUnivariateDistribution
     support::Ts
     p::Ps
 
-    function MvDiscreteNonParametric{T,P,Ts,Ps}(support::Ts, p::Ps) where {
-            T<:Real,P<:Real,Ts<:AbstractVector{<:AbstractVector{T}},Ps<:AbstractVector{P}}
+    function MvDiscreteNonParametric{T,P,Ts,Ps}(support::Ts, p::Ps) where {T <: Real,P <: Real,Ts <: AbstractVector{<:AbstractVector{T}},Ps <: AbstractVector{P}}
         length(support) == length(p) || error("length of `support` and `p` must be equal")
         isprobvec(p) || error("`p` must be a probability vector")
         allunique(support) || error("`support` must contain only unique value")
@@ -29,12 +25,11 @@ probs(d)   # Get a Vector of the probabilities (ps) associated with the support
 External links
 * [Probability mass function on Wikipedia](http://en.wikipedia.org/wiki/Probability_mass_function)
 """
-struct DiscreteNonParametric{T<:Real,P<:Real,Ts<:AbstractVector{T},Ps<:AbstractVector{P}} <: DiscreteUnivariateDistribution
+struct DiscreteNonParametric{T <: Real,P <: Real,Ts <: AbstractVector{T},Ps <: AbstractVector{P}} <: DiscreteUnivariateDistribution
     support::Ts
     p::Ps
 
-    function DiscreteNonParametric{T,P,Ts,Ps}(vs::Ts, ps::Ps; check_args=true) where {
-            T<:Real,P<:Real,Ts<:AbstractVector{T},Ps<:AbstractVector{P}}
+    function DiscreteNonParametric{T,P,Ts,Ps}(vs::Ts, ps::Ps; check_args=true) where {T <: Real,P <: Real,Ts <: AbstractVector{T},Ps <: AbstractVector{P}}
         check_args || return new{T,P,Ts,Ps}(vs, ps)
         @check_args(DiscreteNonParametric, length(vs) == length(ps))
         @check_args(DiscreteNonParametric, isprobvec(ps))
@@ -44,8 +39,7 @@ struct DiscreteNonParametric{T<:Real,P<:Real,Ts<:AbstractVector{T},Ps<:AbstractV
     end
 end
 
-DiscreteNonParametric(vs::Ts, ps::Ps; check_args=true) where {
-        T<:Real,P<:Real,Ts<:AbstractVector{T},Ps<:AbstractVector{P}} =
+DiscreteNonParametric(vs::Ts, ps::Ps; check_args=true) where {T <: Real,P <: Real,Ts <: AbstractVector{T},Ps <: AbstractVector{P}} =
     DiscreteNonParametric{T,P,Ts,Ps}(vs, ps, check_args=check_args)
 
 Base.eltype(::Type{<:DiscreteNonParametric{T}}) where T = T
@@ -69,11 +63,11 @@ Get the vector of probabilities associated with the support of `d`.
 """
 probs(d::DiscreteNonParametric)  = d.p
 
-==(c1::D, c2::D) where D<:DiscreteNonParametric =
+==(c1::D, c2::D) where D <: DiscreteNonParametric =
     (support(c1) == support(c2) || all(support(c1) .== support(c2))) &&
     (probs(c1) == probs(c2) || all(probs(c1) .== probs(c2)))
 
-Base.isapprox(c1::D, c2::D) where D<:DiscreteNonParametric =
+Base.isapprox(c1::D, c2::D) where D <: DiscreteNonParametric =
     (support(c1) ≈ support(c2) || all(support(c1) .≈ support(c2))) &&
     (probs(c1) ≈ probs(c2) || all(probs(c1) .≈ probs(c2)))
 
@@ -87,7 +81,7 @@ function rand(rng::AbstractRNG, d::DiscreteNonParametric)
     cp = p[1]
     i = 1
     while cp <= draw && i < n
-        @inbounds cp += p[i +=1]
+        @inbounds cp += p[i += 1]
     end
     return x[i]
 end
@@ -174,7 +168,7 @@ function quantile(d::DiscreteNonParametric, q::Real)
     k = length(x)
     i = 1
     cp = p[1]
-    while cp < q && i < k #Note: is i < k necessary?
+    while cp < q && i < k # Note: is i < k necessary?
         i += 1
         @inbounds cp += p[i]
     end
@@ -224,7 +218,7 @@ function mgf(d::DiscreteNonParametric, t::Real)
     x, p = params(d)
     s = zero(Float64)
     for i in 1:length(x)
-        s += p[i] * exp(t*x[i])
+        s += p[i] * exp(t * x[i])
     end
     s
 end
@@ -233,26 +227,25 @@ function cf(d::DiscreteNonParametric, t::Real)
     x, p = params(d)
     s = zero(Complex{Float64})
     for i in 1:length(x)
-       s += p[i] * cis(t*x[i])
+        s += p[i] * cis(t * x[i])
     end
     s
 end
 
 # Sufficient statistics
 
-struct DiscreteNonParametricStats{T<:Real,W<:Real,Ts<:AbstractVector{T},
-                                  Ws<:AbstractVector{W}} <: SufficientStats
+struct DiscreteNonParametricStats{T <: Real,W <: Real,Ts <: AbstractVector{T},Ws <: AbstractVector{W}} <: SufficientStats
     support::Ts
     freq::Ws
 end
 
-function suffstats(::Type{<:DiscreteNonParametric}, x::AbstractArray{T}) where {T<:Real}
+function suffstats(::Type{<:DiscreteNonParametric}, x::AbstractArray{T}) where {T <: Real}
 
     N = length(x)
     N == 0 && return DiscreteNonParametricStats(T[], Float64[])
 
     n = 1
-    vs = Vector{T}(undef,N)
+    vs = Vector{T}(undef, N)
     ps = zeros(Float64, N)
     x = sort(vec(x))
 
@@ -277,7 +270,7 @@ function suffstats(::Type{<:DiscreteNonParametric}, x::AbstractArray{T}) where {
 end
 
 function suffstats(::Type{<:DiscreteNonParametric}, x::AbstractArray{T},
-                   w::AbstractArray{W}) where {T<:Real,W<:Real}
+                   w::AbstractArray{W}) where {T <: Real,W <: Real}
 
     @check_args(DiscreteNonParametric, length(x) == length(w))
 

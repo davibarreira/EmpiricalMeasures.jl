@@ -7,6 +7,7 @@ using Random
 using ArraysOfArrays
 
 export MvDiscreteNonParametric
+export MvDiscreteNonParametricSampler
 export discretemeasure
 export sampler
 # export rand
@@ -104,7 +105,7 @@ Get the vector of probabilities associated with the support of `d`.
 """
 probs(d::MvDiscreteNonParametric)  = d.p
 
-Base.length(d::MvDiscreteNonParametric) = length(d.support)
+Base.length(d::MvDiscreteNonParametric) = innersize(d.support)[1]
 
 
 """
@@ -172,27 +173,56 @@ MvDiscreteNonParametricSampler(support::S, p::AbstractVector{<:Real}
                               ) where {T <: Real,S <: AbstractVector{<:AbstractVector{T}}} =
     MvDiscreteNonParametricSampler{T,S}(support, p)
 
-rand(rng::AbstractRNG, s::MvDiscreteNonParametricSampler) =
-    (@inbounds v = s.support[rand(rng, s.aliastable)]; v)
+# rand(rng::AbstractRNG, s::MvDiscreteNonParametricSampler) =
+#     (@inbounds v = s.support[Base.rand(rng, s.aliastable)]; v)
 
+
+# function _rand!(rng::AbstractRNG, s::MvDiscreteNonParametricSampler, x::AbstractVector{T}) where T <: Real
+#     (@inbounds x = s.support[Base.rand(rng, s.aliastable)]; x)
+# end
 # Sampling
 
 sampler(d::MvDiscreteNonParametric) =
     MvDiscreteNonParametricSampler(support(d), probs(d))
 
-function Base.rand(rng::AbstractRNG, d::MvDiscreteNonParametric)
-    x = d.support
+# function Base.rand(rng::AbstractRNG, d::MvDiscreteNonParametric)
+#     x = d.support
+#     p = d.p
+#     n = length(p)
+#     draw = Base.rand(rng, float(eltype(p)))
+#     cp = p[1]
+#     i = 1
+#     while cp <= draw && i < n
+#         @inbounds cp += p[i += 1]
+#     end
+#     return x[i]
+# end
+
+function Distributions._rand!(rng::AbstractRNG, d::MvDiscreteNonParametric, x::AbstractVector{T}) where T <: Real
+
+    length(x) == length(d) || throw(DimensionMismatch("Invalid argument dimension."))
+    s = d.support
     p = d.p
+
     n = length(p)
     draw = Base.rand(rng, float(eltype(p)))
     cp = p[1]
     i = 1
     while cp <= draw && i < n
-        @inbounds cp += p[i +=1]
+        @inbounds cp += p[i += 1]
     end
-    return x[i]
+    for (j,v) in enumerate(s[i])
+        x[j] = v
+    end
+    return x
 end
 
+# _rand!(rng::AbstractRNG, d::MvDiscreteNonParametricSampler,G)
+
+# _rand!(d::Multinomial, x::AbstractVector{T}) where T <: Real =
+#     multinom_rand!(ntrials(d), probs(d), x)
+# _rand!(rng::AbstractRNG, d::Multinomial, x::AbstractVector{T}) where T <: Real =
+#     multinom_rand!(rng, ntrials(d), probs(d), x)
 
 
 
