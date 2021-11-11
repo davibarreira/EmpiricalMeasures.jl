@@ -44,12 +44,61 @@ end
 Construct a multivariate discrete nonparametric probability distribution with `support` and corresponding
 probabilities `p`. If the probability vector argument is not passed, then
 equal probability is assigned to each entry in the support.
+
+# Examples
+```julia
+using ArraysOfArrays
+# rows correspond to samples
+μ = MvDiscreteNonParametric(nestedview(rand(7,3)'))
+
+# columns correspond to samples
+ν = MvDiscreteNonParametric(nestedview(rand(7,3)))
+```
 """
 function MvDiscreteNonParametric(
     support::AbstractVector{<:AbstractVector{<:Real}},
     p::AbstractVector{<:Real}=fill(inv(length(support)), length(support)),
 )
     return MvDiscreteNonParametric{eltype(eltype(support)),eltype(p), typeof(support),typeof(p)}(support, p)
+end
+
+"""
+    MvDiscreteNonParametric(
+        support::Matrix{<:Real},
+        p::AbstractVector{<:Real}=fill(inv(length(support)), length(support));
+        by=:row
+    )
+
+Construct a multivariate discrete nonparametric probability distribution
+with a matrix `support` where samples `by` either `:row` or `:col`,
+and corresponding
+probabilities `p`. If the probability vector argument is not passed, then
+equal probability is assigned to each entry in the support.
+
+# Examples
+```julia
+# rows correspond to samples
+using LinearAlgebra
+μ = MvDiscreteNonParametric(rand(10,3), normalize!(rand(10),1))
+
+# columns correspond to samples
+ν = MvDiscreteNonParametric(rand(3,5), normalize!(rand(5),1), by=:col)
+```
+"""
+function MvDiscreteNonParametric(
+    support::Matrix{<:Real},
+    by = :row,
+    p::AbstractVector{<:Real}= by == :row ? fill(inv(size(support)[1]), size(support)[1]) : fill(inv(size(support)[2]), size(support)[2])
+)
+    if by == :row
+        s = nestedview(support')
+        return MvDiscreteNonParametric{eltype(eltype(s)),eltype(p), typeof(s),typeof(p)}(s, p)
+    elseif by == :col
+        s = nestedview(support)
+        return MvDiscreteNonParametric{eltype(eltype(s)),eltype(p), typeof(s),typeof(p)}(s, p)
+    else
+        error("only options are :row and :col")
+    end
 end
 
 Base.eltype(::Type{<:MvDiscreteNonParametric{T}}) where T = T
