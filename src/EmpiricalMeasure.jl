@@ -241,5 +241,13 @@ function Distributions.mean(μ::MvDiscreteNonParametric)
     return StatsBase.mean(μ.support, weights(μ.p))
 end
 
+function Distributions.var(μ::MvDiscreteNonParametric)
+    return StatsBase.var(μ.support, ProbabilityWeights(μ.p), corrected=false)
+end
+
+function Distributions.cov(μ::MvDiscreteNonParametric)
+    return StatsBase.cov(flatview(μ.support)', weights(μ.p),corrected=false)
+end
+
 
 end
