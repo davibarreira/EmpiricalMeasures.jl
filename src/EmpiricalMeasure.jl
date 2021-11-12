@@ -10,9 +10,7 @@ using StatsBase
 export MvDiscreteNonParametric
 export MvDiscreteNonParametricSampler
 export empiricalmeasure
-# export mean
-# export sampler
-# export rand
+export support, probs
 
 struct MvDiscreteNonParametric{T <: Real,P <: Real,Ts <: AbstractVector{<:AbstractVector{T}},Ps <: AbstractVector{P}} <: DiscreteMultivariateDistribution
 
@@ -59,40 +57,26 @@ end
 """
     MvDiscreteNonParametric(
         support::Matrix{<:Real},
-        p::AbstractVector{<:Real}=fill(inv(length(support)), length(support));
-        by=:row
+        p::AbstractVector{<:Real}=fill(inv(length(support)), length(support)
     )
 
 Construct a multivariate discrete nonparametric probability distribution
-with a matrix `support` where samples `by` either `:row` or `:col`,
-and corresponding
+from a matrix as `support` where each row is a sample, and corresponding
 probabilities `p`. If the probability vector argument is not passed, then
 equal probability is assigned to each entry in the support.
 
 # Examples
 ```julia
-# rows correspond to samples
+# the rows correspond to the samples
 using LinearAlgebra
 μ = MvDiscreteNonParametric(rand(10,3), normalize!(rand(10),1))
-
-# columns correspond to samples
-ν = MvDiscreteNonParametric(rand(3,5), normalize!(rand(5),1), by=:col)
 ```
 """
 function MvDiscreteNonParametric(
     support::Matrix{<:Real},
-    by=:row,
-    p::AbstractVector{<:Real}=by == :row ? fill(inv(size(support)[1]), size(support)[1]) : fill(inv(size(support)[2]), size(support)[2])
+    p::AbstractVector{<:Real}= fill(inv(size(support)[1]), size(support)[1])
 )
-    if by == :row
-        s = nestedview(support')
-        return MvDiscreteNonParametric{eltype(eltype(s)),eltype(p),typeof(s),typeof(p)}(s, p)
-    elseif by == :col
-        s = nestedview(support)
-        return MvDiscreteNonParametric{eltype(eltype(s)),eltype(p),typeof(s),typeof(p)}(s, p)
-    else
-        error("only options are :row and :col")
-end
+    return MvDiscreteNonParametric(nestedview(support'),p)
 end
 
 Base.eltype(::Type{<:MvDiscreteNonParametric{T}}) where T = T
@@ -107,10 +91,29 @@ support(d::MvDiscreteNonParametric) = d.support
     probs(d::MvDiscreteNonParametric)
 Get the vector of probabilities associated with the support of `d`.
 """
-probs(d::MvDiscreteNonParametric)  = d.p
+probs(d::MvDiscreteNonParametric) = d.p
 
+
+# It would be more intuitive if length was the
+# 
+"""
+    length(d::MvDiscreteNonParametric)
+Retunrs the dimension of the mass points (samples).
+It corresponds to `innersize(d.support)[1]`,
+where `innersize` is a function from from ArraysOfArrays.jl.
+"""
 Base.length(d::MvDiscreteNonParametric) = innersize(d.support)[1]
 
+"""
+    size(d::MvDiscreteNonParametric)
+Returns the size of the support as a tuple where
+the first value is the number of points (samples)
+and the second is the dimension of the samples (e.g ℝⁿ).
+It corresponds to `size(flatview(d.support)')`
+where `flatview` is a function from from ArraysOfArrays.jl
+that turns an Array of Arrays into a matrix.
+"""
+Base.size(d::MvDiscreteNonParametric) = size(flatview(d.support)')
 
 """
     empiricalmeasure(
@@ -159,24 +162,22 @@ end
 """
     empiricalmeasure(
         support::Matrix{<:Real},
-        by=:row,
         probs::AbstractVector{<:Real}=fill(inv(length(support)), length(support)),
     )
 Construct a multivariate empirical measure from a matrix
-as `support` and sample `by` either `:row` or `:col`.
+as `support` and sample by rows.
 # Examples
 ```julia
 using ArraysOfArrays
-# rows correspond to samples
-μ = empiricalmeasure(rand(7,3), :row, normalize!(rand(10),1))
+# the rows correspond to the samples
+μ = empiricalmeasure(rand(7,3), normalize!(rand(10),1))
 ```
 """
 function empiricalmeasure(
     support::Matrix{<:Real},
-    by=:row,
-    p::AbstractVector{<:Real}=by == :row ? fill(inv(size(support)[1]), size(support)[1]) : fill(inv(size(support)[2]), size(support)[2])
+    p::AbstractVector{<:Real}= fill(inv(size(support)[1]), size(support)[1])
 )
-    return MvDiscreteNonParametric(support, by, p)
+    return MvDiscreteNonParametric(nestedview(support'),p)
 end
 
 

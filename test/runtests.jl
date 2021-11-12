@@ -32,6 +32,6 @@ using Test
 
     # Matrix
     M = rand(10,2)
-    # μ = @inferred(MvDiscreteNonParametric(M))
+    μ = @inferred(MvDiscreteNonParametric(M))
 
 end
