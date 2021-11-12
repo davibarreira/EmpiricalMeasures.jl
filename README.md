@@ -9,12 +9,12 @@ Given a set of points x₁,...,xₙ ∈ ℝⁿ, the *generalized empirical proba
 a discrete finite measure defined as:
 
 <p align="center">
-<img src="./empiricalmeasure.svg" align="center" height="25." />
+<img src="../assets/empiricalmeasure.svg" align="center" height="25." />
 <p></p>
 
 where each pᵢ is the probability of each mass point
 multiplying a Dirac measures, i.e
 
 <p align="center">
-<img src="./diracdef.svg" align="center" height="50." />.
+<img src="./assets/diracdef.svg" align="center" height="50." />.
 <p></p>
