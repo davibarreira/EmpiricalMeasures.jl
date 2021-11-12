@@ -12,7 +12,7 @@ export MvDiscreteNonParametricSampler
 export empiricalmeasure
 export support, probs
 
-struct MvDiscreteNonParametric{T <: Real,P <: Real,Ts <: AbstractVector{<:AbstractVector{T}},Ps <: AbstractVector{P}} <: DiscreteMultivariateDistribution
+struct MvDiscreteNonParametric{T <: Real,P <: Real,Ts <:  ArrayOfSimilarArrays{T},Ps <: AbstractVector{P}} <: DiscreteMultivariateDistribution
 
     support::Ts
     p::Ps
@@ -51,7 +51,8 @@ function MvDiscreteNonParametric(
     support::AbstractVector{<:AbstractVector{<:Real}},
     p::AbstractVector{<:Real}=fill(inv(length(support)), length(support)),
 )
-    return MvDiscreteNonParametric{eltype(eltype(support)),eltype(p),typeof(support),typeof(p)}(support, p)
+    return MvDiscreteNonParametric{eltype(eltype(support)),eltype(p),typeof(ArrayOfSimilarArrays(support)),typeof(p)}(
+        ArrayOfSimilarArrays(support), p)
 end
 
 """
@@ -74,9 +75,9 @@ using LinearAlgebra
 """
 function MvDiscreteNonParametric(
     support::Matrix{<:Real},
-    p::AbstractVector{<:Real}= fill(inv(size(support)[1]), size(support)[1])
+    p::AbstractVector{<:Real}=fill(inv(size(support)[1]), size(support)[1])
 )
-    return MvDiscreteNonParametric(nestedview(support'),p)
+    return MvDiscreteNonParametric(nestedview(support'), p)
 end
 
 Base.eltype(::Type{<:MvDiscreteNonParametric{T}}) where T = T
@@ -156,7 +157,8 @@ function empiricalmeasure(
     support::AbstractVector{<:AbstractVector{<:Real}},
     p::AbstractVector{<:Real}=fill(inv(length(support)), length(support)),
     )
-    return MvDiscreteNonParametric{eltype(eltype(support)),eltype(p),typeof(support),typeof(p)}(support, p)
+    return MvDiscreteNonParametric(support, p)
+    # return MvDiscreteNonParametric{eltype(eltype(support)),eltype(p),typeof(support),typeof(p)}(support, p)
 end
 
 """
@@ -175,9 +177,9 @@ using ArraysOfArrays
 """
 function empiricalmeasure(
     support::Matrix{<:Real},
-    p::AbstractVector{<:Real}= fill(inv(size(support)[1]), size(support)[1])
+    p::AbstractVector{<:Real}=fill(inv(size(support)[1]), size(support)[1])
 )
-    return MvDiscreteNonParametric(nestedview(support'),p)
+    return MvDiscreteNonParametric(nestedview(support'), p)
 end
 
 
