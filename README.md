@@ -9,7 +9,7 @@ Given a set of points x₁,...,xₙ ∈ ℝⁿ, the *generalized empirical proba
 a discrete finite measure defined as:
 
 <p align="center">
-<img src="../assets/empiricalmeasure.svg" align="center" height="25." />
+<img src="./assets/empiricalmeasure.svg" align="center" height="25." />
 <p></p>
 
 where each pᵢ is the probability of each mass point
