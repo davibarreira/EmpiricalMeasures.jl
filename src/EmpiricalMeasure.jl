@@ -246,8 +246,10 @@ function Distributions.var(μ::MvDiscreteNonParametric)
 end
 
 function Distributions.cov(μ::MvDiscreteNonParametric)
-    return StatsBase.cov(flatview(μ.support)', weights(μ.p),corrected=false)
+    return StatsBase.cov(flatview(μ.support)', weights(μ.p), corrected=false)
 end
 
+Distributions.entropy(d::MvDiscreteNonParametric) = entropy(probs(d))
+Distributions.entropy(d::MvDiscreteNonParametric, b::Real) = entropy(probs(d), b)
 
 end
