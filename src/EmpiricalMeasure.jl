@@ -229,7 +229,7 @@ end
 function Distributions._logpdf(d::MvDiscreteNonParametric, x::AbstractVector{T}) where T <: Real
     s = support(d)
     p = probs(d)
-    for i in 1:length(d)
+    for i in 1:length(p)
         if s[i] == x
             return log(p[i])
         end
