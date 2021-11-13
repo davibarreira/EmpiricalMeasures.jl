@@ -48,7 +48,6 @@ using Test
             @test size(μ) == (length(A), length(A[1]))
             @test probs(μ) == p
 
-
         end
 
         @testset "MvDiscreteNonParametric from Matrix" begin
@@ -98,6 +97,21 @@ using Test
             @test size(μ) == size(A)
             @test probs(μ) == fill(1 / n, n)
 
+        end
+        @testset "empiricalmeasure 1D dispatch" begin
+
+            n = 4
+            A = rand(n)
+            p = normalize!(rand(n), 1)
+            μ = @inferred(empiricalmeasure(A, p))
+
+            @test typeof(μ) <: DiscreteNonParametric
+            @test μ.support == sort(A)
+            @test μ.p == p[sortperm(A)]
+
+            μ = @inferred(empiricalmeasure(A))
+            @test μ.support == sort(A)
+            @test μ.p == fill(1 / n, n)
         end
     end
 
@@ -159,10 +173,10 @@ using Test
         μ = empiricalmeasure(A, [0.2,0.5,0.3])
 
         for i in 1:3
-            samples = nestedview(rand(μ, 10000))
+        samples = nestedview(rand(μ, 10000))
             @test abs(mean([A[i,:] == s for s in samples]) - μ.p[i]) < 0.05
-        end
 
+        end
     end
         
 end
