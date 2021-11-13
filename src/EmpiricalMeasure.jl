@@ -11,6 +11,7 @@ export MvDiscreteNonParametric
 export MvDiscreteNonParametricSampler
 export empiricalmeasure
 export support, probs
+export mean, var
 
 struct MvDiscreteNonParametric{T <: Real,P <: Real,Ts <:  ArrayOfSimilarArrays{T},Ps <: AbstractVector{P}} <: DiscreteMultivariateDistribution
 
@@ -244,8 +245,10 @@ function Distributions.mean(μ::MvDiscreteNonParametric)
     return StatsBase.mean(μ.support, weights(μ.p))
 end
 
-function Distributions.var(μ::MvDiscreteNonParametric)
-    return StatsBase.var(μ.support, ProbabilityWeights(μ.p), corrected=false)
+function Distributions.var(d::MvDiscreteNonParametric)
+    x = flatview(support(d))'
+    p = probs(d)
+    return StatsBase.var(x,Weights(p, one(eltype(p))),1,corrected=false)
 end
 
 function Distributions.cov(μ::MvDiscreteNonParametric)
