@@ -108,18 +108,38 @@ using Test
 
         Random.seed!(7)
         n, m = 7, 9
-        A = rand(n,m)
-        p = normalize!(rand(n),1)
+        A = rand(n, m)
+        p = normalize!(rand(n), 1)
         μ = @inferred(MvDiscreteNonParametric(A, p))
 
-        @test mean(μ) == mean(flatview(μ.support)[:,:],Weights(p),dims=2)[:]
+        @test mean(μ) == mean(flatview(μ.support)[:,:], Weights(p), dims=2)[:]
         @test var(μ) ≈ variance(μ)
         @test cov(μ) ≈ covariance(μ)
-        @test pdf(μ,flatview(μ.support)) ≈ μ.p
-        @test pdf(μ,zeros(m)) == 0.0
+        @test pdf(μ, flatview(μ.support)) ≈ μ.p
+        @test pdf(μ, zeros(m)) == 0.0
         @test entropy(μ) == entropy(μ.p)
-        @test entropy(μ,2) == entropy(μ.p,2)
+        @test entropy(μ, 2) == entropy(μ.p, 2)
 
     end
 
+    @testset "Sampling" begin
+        Random.seed!(7)
+        μ = empiricalmeasure(rand(10, 10))
+        @test rand(μ) in μ.support
+
+        for sample in eachcol(rand(μ, 10))
+           @test sample in μ.support
+        end
+
+        A = rand(3, 2)
+        μ = empiricalmeasure(A, [0.2,0.5,0.3])
+
+        for i in 1:3
+            samples = nestedview(rand(μ, 10000))
+            @test abs(mean([A[i,:] == s for s in samples]) - μ.p[i]) < 0.05
+        end
+
+    end
+        
 end
+        
