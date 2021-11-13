@@ -241,18 +241,20 @@ function Distributions._logpdf(d::MvDiscreteNonParametric, x::AbstractVector{T})
 end
 
 
-function Distributions.mean(μ::MvDiscreteNonParametric)
-    return StatsBase.mean(μ.support, weights(μ.p))
+function Distributions.mean(d::MvDiscreteNonParametric)
+    return StatsBase.mean(d.support, weights(d.p))
 end
 
 function Distributions.var(d::MvDiscreteNonParametric)
-    x = flatview(support(d))'
+    x = support(d)
     p = probs(d)
-    return StatsBase.var(x,Weights(p, one(eltype(p))),1,corrected=false)
+    return StatsBase.var(x,Weights(p, one(eltype(p))),corrected=false)
 end
 
-function Distributions.cov(μ::MvDiscreteNonParametric)
-    return StatsBase.cov(flatview(μ.support)', weights(μ.p), corrected=false)
+function Distributions.cov(d::MvDiscreteNonParametric)
+    x = support(d)
+    p = probs(d)
+    return cov(x,Weights(p, one(eltype(p))),corrected=false)
 end
 
 Distributions.entropy(d::MvDiscreteNonParametric) = entropy(probs(d))
