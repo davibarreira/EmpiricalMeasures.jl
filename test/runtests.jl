@@ -117,6 +117,8 @@ using Test
         @test cov(μ) ≈ covariance(μ)
         @test pdf(μ,flatview(μ.support)) ≈ μ.p
         @test pdf(μ,zeros(m)) == 0.0
+        @test entropy(μ) == entropy(μ.p)
+        @test entropy(μ,2) == entropy(μ.p,2)
 
     end
 
