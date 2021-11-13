@@ -1,4 +1,4 @@
-# EmpiricalMeasures.jl <a href='#'><img src="./assets/logo.svg" align="center" height="50." /></a>
+# EmpiricalMeasures.jl <a href='#'><img src="./assets/logo.svg" align="right" height="80." /></a>
 
 
 [![][bag-dev]][bld-dev]
