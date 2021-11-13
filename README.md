@@ -24,6 +24,16 @@ This package is compatible with [Distributions.jl](https://github.com/JuliaStats
 and creates a new distribution called `MvDiscreteNonParametric` which is a multivariate
 version of `DiscreteNonParametric`.
 
+## EmpiricalMeasures.jl vs EmpiricalDistributions.jl vs EmpiricalCDFs.jl
+
+Let's clarify the difference between EmpiricalMeasures.jl and other similar
+packages.
+* EmpiricalMeasures.jl - Implements a multivariate discrete distribution as a sum of weighted Dirac measures;
+* EmpiricalDistributions.jl - Provides "binned approximations" of continuous distributions;
+* EmpiricalCDFs.jl - Computes the cumulative density function of 1D arrays.
+
+Thus, each package fulfills very different tasks.
+
 ## Basic Use
 
 Let's do a quick overview of how to use this package.

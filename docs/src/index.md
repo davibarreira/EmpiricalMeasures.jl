@@ -94,6 +94,15 @@ rand(μ,10)
  1  0  1  1  1  1  1  1  0  1
  1  1  1  0  0  0  0  0  1  0
 ```
+## EmpiricalMeasures.jl vs EmpiricalDistributions.jl vs EmpiricalCDFs.jl
+
+Let's clarify the difference between EmpiricalMeasures.jl and other similar
+packages.
+* EmpiricalMeasures.jl - Implements a multivariate discrete distribution as a sum of weighted Dirac measures;
+* EmpiricalDistributions.jl - Provides "binned approximations" of continuous distributions;
+* EmpiricalCDFs.jl - Computes the cumulative density function of 1D arrays.
+
+Thus, each package fulfills very different tasks.
 
 ## Future Plans
 
