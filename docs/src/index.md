@@ -2,20 +2,6 @@
 
 This package implements *empirical probability measures* in Julia.
 
-Given a set of points x₁,...,xₙ ∈ ℝⁿ, the *generalized empirical probability measure* is
-a discrete finite measure defined as:
-
-<p align="center">
-<img src="./assets/empiricalmeasure.svg" align="center" height="25." />
-<p></p>
-
-where each pᵢ is the probability of each point ("sample") xᵢ
-multiplying a Dirac measures, i.e
-
-<p align="center">
-<img src="./assets/diracdef.svg" align="center" height="50." />.
-<p></p>
-
 This package is compatible with [Distributions.jl](https://github.com/JuliaStats/Distributions.jl/),
 and creates a new distribution called `MvDiscreteNonParametric` which is a multivariate
 version of `DiscreteNonParametric`.
