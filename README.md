@@ -1,7 +1,8 @@
 # EmpiricalMeasure.jl
 
+[![][bag-dev]][bld-dev]
 [![Build Status](https://github.com/davibarreira/EmpiricalMeasure.jl/workflows/CI/badge.svg)](https://github.com/davibarreira/EmpiricalMeasure.jl/actions)
-[![Coverage](https://codecov.io/gh/davibarreira/EmpiricalMeasure.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/davibarreira/EmpiricalMeasure.jl)
+[![Coverage](https://codecov.io/gh/davibarreira/EmpiricalMeasure.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/davibarreira/EmpiricalMeasure.jl)
 
 This package implements *empirical probability measures* in Julia.
 
@@ -120,3 +121,6 @@ The goal is to extend this first, by making it compatible with
 using [MeasureBase.jl](https://github.com/cscherrer/MeasureBase.jl), and thus,
 allow for measures which do not sum to 1.
 Also, the goal is to generalize for any non-parametric finite discrete measures (this might be too ambitious).
+
+[bag-dev]: https://img.shields.io/badge/docs-dev-blue.svg
+[bld-dev]: https://davibarreira.github.io/EmpiricalMeasure.jl/dev
