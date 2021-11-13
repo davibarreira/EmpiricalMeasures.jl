@@ -11,9 +11,10 @@ export MvDiscreteNonParametric
 export MvDiscreteNonParametricSampler
 export empiricalmeasure
 export support, probs
-export mean, var
+export mean, var, cov, pdf
 
-struct MvDiscreteNonParametric{T <: Real,P <: Real,Ts <:  ArrayOfSimilarArrays{T},Ps <: AbstractVector{P}} <: DiscreteMultivariateDistribution
+struct MvDiscreteNonParametric{T <: Real,
+    P <: Real,Ts <:  ArrayOfSimilarArrays{T},Ps <: AbstractVector{P}} <: DiscreteMultivariateDistribution
 
     support::Ts
     p::Ps
@@ -87,13 +88,13 @@ Base.eltype(::Type{<:MvDiscreteNonParametric{T}}) where T = T
     support(d::MvDiscreteNonParametric)
 Get a sorted AbstractVector defining the support of `d`.
 """
-support(d::MvDiscreteNonParametric) = d.support
+Distributions.support(d::MvDiscreteNonParametric) = d.support
 
 """
     probs(d::MvDiscreteNonParametric)
 Get the vector of probabilities associated with the support of `d`.
 """
-probs(d::MvDiscreteNonParametric) = d.p
+Distributions.probs(d::MvDiscreteNonParametric) = d.p
 
 
 # It would be more intuitive if length was the
@@ -248,13 +249,13 @@ end
 function Distributions.var(d::MvDiscreteNonParametric)
     x = support(d)
     p = probs(d)
-    return StatsBase.var(x,Weights(p, one(eltype(p))),corrected=false)
+    return StatsBase.var(x, Weights(p, one(eltype(p))), corrected=false)
 end
 
 function Distributions.cov(d::MvDiscreteNonParametric)
     x = support(d)
     p = probs(d)
-    return cov(x,Weights(p, one(eltype(p))),corrected=false)
+    return cov(x, Weights(p, one(eltype(p))), corrected=false)
 end
 
 Distributions.entropy(d::MvDiscreteNonParametric) = entropy(probs(d))
