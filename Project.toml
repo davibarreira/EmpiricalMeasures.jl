@@ -1,4 +1,4 @@
-name = "EmpiricalMeasure"
+name = "EmpiricalMeasures"
 uuid = "4dba0d15-3e3f-4b85-8189-2c1dc6b693a8"
 authors = ["Davi Barreira <davisbarreira@gmail.com> and contributors"]
 version = "0.1.0"

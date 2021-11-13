@@ -1,4 +1,4 @@
-using EmpiricalMeasure
+using EmpiricalMeasures
 using ArraysOfArrays
 using StatsBase
 using LinearAlgebra
@@ -6,7 +6,7 @@ using Random
 using Distributions
 using Test
 
-@testset "EmpiricalMeasure.jl" begin
+@testset "EmpiricalMeasures.jl" begin
 
     @testset "Declaring Empirical Measures" begin
 

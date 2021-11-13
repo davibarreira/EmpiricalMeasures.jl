@@ -1,4 +1,4 @@
-module EmpiricalMeasure
+module EmpiricalMeasures
 
 using Distributions
 import Distributions:DiscreteMultivariateDistribution

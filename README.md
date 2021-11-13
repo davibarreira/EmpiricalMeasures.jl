@@ -1,8 +1,8 @@
-# EmpiricalMeasure.jl
+# EmpiricalMeasures.jl
 
 [![][bag-dev]][bld-dev]
-[![Build Status](https://github.com/davibarreira/EmpiricalMeasure.jl/workflows/CI/badge.svg)](https://github.com/davibarreira/EmpiricalMeasure.jl/actions)
-[![Coverage](https://codecov.io/gh/davibarreira/EmpiricalMeasure.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/davibarreira/EmpiricalMeasure.jl)
+[![Build Status](https://github.com/davibarreira/EmpiricalMeasures.jl/workflows/CI/badge.svg)](https://github.com/davibarreira/EmpiricalMeasures.jl/actions)
+[![Coverage](https://codecov.io/gh/davibarreira/EmpiricalMeasures.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/davibarreira/EmpiricalMeasures.jl)
 
 This package implements *empirical probability measures* in Julia.
 
@@ -35,7 +35,7 @@ dispatches to either `DiscreteNonParametric` (1D case from Distributions.jl)
 or `MvDiscreteNonParametric` based on the `support`.
 
 ```julia
-using EmpiricalMeasure
+using EmpiricalMeasures
 using LinearAlgebra
 
 # 1D DiscreteNonParametric example
@@ -58,7 +58,7 @@ multivariate discrete distributions without the possibility
 of dispatching for the 1D case.
 
 ```julia
-using EmpiricalMeasure
+using EmpiricalMeasures
 using LinearAlgebra
 using ArraysOfArrays
 
@@ -75,7 +75,7 @@ This package implements all the basic functionalities
 suggested by Distributions.jl for new multivariate distributions.
 
 ```julia
-using EmpiricalMeasure
+using EmpiricalMeasures
 
 p = ([3/5, 1/5, 1/5])
 A = [[1,0],[1,1],[0,1]]
@@ -115,7 +115,7 @@ rand(μ,10)
 
 ### Future Plans
 
-At the moment, EmpiricalMeasure.jl only produces probability measures in ℝⁿ.
+At the moment, EmpiricalMeasures.jl only produces probability measures in ℝⁿ.
 The goal is to extend this first, by making it compatible with
 [MeasureTheory.jl](https://github.com/cscherrer/MeasureTheory.jl)
 using [MeasureBase.jl](https://github.com/cscherrer/MeasureBase.jl), and thus,
@@ -123,4 +123,4 @@ allow for measures which do not sum to 1.
 Also, the goal is to generalize for any non-parametric finite discrete measures (this might be too ambitious).
 
 [bag-dev]: https://img.shields.io/badge/docs-dev-blue.svg
-[bld-dev]: https://davibarreira.github.io/EmpiricalMeasure.jl/dev
+[bld-dev]: https://davibarreira.github.io/EmpiricalMeasures.jl/dev

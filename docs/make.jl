@@ -1,14 +1,14 @@
 # Inside make.jl
 push!(LOAD_PATH,"../src/")
-using EmpiricalMeasure
+using EmpiricalMeasures
 using Documenter
 makedocs(
-         sitename="EmpiricalMeasure.jl",
-         modules=[EmpiricalMeasure],
+         sitename="EmpiricalMeasures.jl",
+         modules=[EmpiricalMeasures],
          pages=[
                 "Home" => "index.md"
                ])
 deploydocs(;
-    repo="github.com/davibarreira/EmpiricalMeasure.jl",
+    repo="github.com/davibarreira/EmpiricalMeasures.jl",
 )
 
