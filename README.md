@@ -6,6 +6,8 @@
 [![Coverage](https://codecov.io/gh/davibarreira/EmpiricalMeasures.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/davibarreira/EmpiricalMeasures.jl)
 
 This package implements *empirical probability measures* in Julia.
+**Atention**: This package is quite new and I'm still improving it's efficiency.
+Thus, the internal data structure might change.
 
 Given a set of points x₁,...,xₙ ∈ ℝⁿ, the *generalized empirical probability measure* is
 a discrete finite measure defined as:
