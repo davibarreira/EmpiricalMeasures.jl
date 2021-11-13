@@ -75,6 +75,30 @@ using Test
             @test probs(μ) == fill(1 / n, n)
 
         end
+
+        @testset "empiricalmeasure" begin
+
+            Random.seed!(7)
+            n = 4
+            m = 2
+            A = nestedview(rand(n, m)')
+            p = normalize!(rand(n), 1)
+
+            # Passing probabilities
+            μ = @inferred(empiricalmeasure(A, p))
+            @test support(μ) == A
+            @test length(μ) == m
+            @test size(μ) == size(flatview(A)')
+            @test probs(μ)   == p
+
+            A = rand(n, m)
+            μ = @inferred(empiricalmeasure(A))
+            @test flatview(support(μ))' == A
+            @test length(μ) == m
+            @test size(μ) == size(A)
+            @test probs(μ) == fill(1 / n, n)
+
+        end
     end
 
 
