@@ -146,8 +146,6 @@ using ArraysOfArrays
     since this will be dispatched to the multivariate case instead
     of the univariate case for which the algorithm is more efficient.
 
-!!! warning
-    This function and in particular its return values are not stable and might be changed in future releases.
 """
 function empiricalmeasure(
     support::AbstractVector{<:Real},
