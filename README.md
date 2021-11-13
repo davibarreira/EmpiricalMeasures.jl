@@ -113,7 +113,7 @@ rand(μ,10)
  1  1  1  0  0  0  0  0  1  0
 ```
 
-## Future Plans
+### Future Plans
 
 At the moment, EmpiricalMeasure.jl only produces probability measures in ℝⁿ.
 The goal is to extend this first, by making it compatible with
