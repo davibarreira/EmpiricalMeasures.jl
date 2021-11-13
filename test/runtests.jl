@@ -3,6 +3,7 @@ using ArraysOfArrays
 using StatsBase
 using LinearAlgebra
 using Random
+using Distributions
 using Test
 
 @testset "EmpiricalMeasure.jl" begin
@@ -79,12 +80,13 @@ using Test
 
     @testset "Functionalities" begin
         
+
         function variance(d)
             v = zeros(length(d))
             for i in 1:length(d)
-                s = flatview(μ.support)'[:,i]
-                m = mean(d)[i]
-                v[i] = sum(abs2.(s .- m), Weights(d.p))
+                s = flatview(d.support)'[:,i]
+                mₛ = mean(d)[i]
+                v[i] = sum(abs2.(s .- mₛ), Weights(d.p))
             end
             return v
         end
@@ -104,18 +106,18 @@ using Test
             return v
         end
 
-
-        p = ([3 / 5, 1 / 5, 1 / 5])
-        A = [[1,0],[1,1],[0,1]]
+        Random.seed!(7)
+        n, m = 7, 9
+        A = rand(n,m)
+        p = normalize!(rand(n),1)
         μ = @inferred(MvDiscreteNonParametric(A, p))
 
-        v = flatview(μ.support)'[:,1]
-        m = mean(μ)[1]
-        @test sum(abs2.(v .- m), Weights(μ.p)) ≈ var(μ)[1]
+        @test mean(μ) == mean(flatview(μ.support)[:,:],Weights(p),dims=2)[:]
+        @test var(μ) ≈ variance(μ)
+        @test cov(μ) ≈ covariance(μ)
+        @test pdf(μ,flatview(μ.support)) ≈ μ.p
+        @test pdf(μ,zeros(m)) == 0.0
 
-            v = flatview(μ.support)'[:,2]
-        m = mean(μ)[2]
-        @test sum(abs2.(v .- m), Weights(μ.p)) ≈ var(μ)[2]
     end
 
 end
