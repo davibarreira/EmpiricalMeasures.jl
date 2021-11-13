@@ -11,7 +11,7 @@ export MvDiscreteNonParametric
 export MvDiscreteNonParametricSampler
 export empiricalmeasure
 export support, probs
-export mean, var, cov, pdf
+export mean, var, cov, pdf, entropy
 
 struct MvDiscreteNonParametric{T <: Real,
     P <: Real,Ts <:  ArrayOfSimilarArrays{T},Ps <: AbstractVector{P}} <: DiscreteMultivariateDistribution
