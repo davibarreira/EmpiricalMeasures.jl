@@ -1,4 +1,5 @@
-# EmpiricalMeasures.jl
+# EmpiricalMeasures.jl <a href='#'><img src="./assets/logo.svg" align="center" height="50." /></a>
+
 
 [![][bag-dev]][bld-dev]
 [![Build Status](https://github.com/davibarreira/EmpiricalMeasures.jl/workflows/CI/badge.svg)](https://github.com/davibarreira/EmpiricalMeasures.jl/actions)
